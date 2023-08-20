@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jQuery AJAX</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <h3 class="text-center">jQuery AJAX</h3><hr>
+
+    <div class="card">
+        <form id="fruitForm" class="card-body">
+            <div class="form-group mb-1">
+                <input type="text" id="fruitName" placeholder="Fruit Name">
+            </div>
+            <div class="form-group mb-1">
+                <input type="text" id="fruitOrigin" placeholder="Fruit Origin">
+            </div>
+            <div class="form-group mb-1">
+                <input type="url" id="fruitImg" placeholder="Fruit Image">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">SAVE</button>
+            </div>
+        </form>
+    </div>
+
+    <a id="google" href="https://google.com">Go to Google Homepage</a>
+    <table id="basket" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>#</th>
+                <th>Fruit Name</th>
+                <th>Origin</th>
+                <th>#</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        </tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+    <script>
+        // $('#fruitForm')
+        // $(document).on('click', '#google', function(e){
+        //     e.preventDefault();
+        //     console.log(this);
+        // });
+
+        $(document).on('click', 'button.delete', function(){
+            console.log('deleting :', $(this).parent().parent().remove())
+        })
+
+        $('#fruitForm').on('submit', function(e){
+            e.preventDefault();
+            let fruit={};
+            fruit.name = $('#fruitName').val().trim();
+            fruit.origin = $('#fruitOrigin').val().trim();
+            fruit.img = $('#fruitImg').val().trim();
+            try
+            {
+                if(fruit.name.length==0)
+                    throw {msg:'Pls write Fruit Name'};
+
+                if(fruit.origin.length==0)
+                    throw {msg:'Pls write Origin'};
+
+                console.log('All check have been passed');
+                
+                fruits.push(fruit);
+                saveBasket();
+                keepinBasket(fruit);
+
+
+            }
+            catch(err)
+            {
+                console.log('error: ' + err.msg);
+            }
+        });
+        // JSON : JavaScript Object Notation
+        // array
+        // let fruits = ["Apple", "Banana", "Cherry"]
+        // array ob object
+        const fruits = [
+            {
+                "name"  : "Apple", 
+                "origin": "Caspian Sea",
+                "img"   : "https://thumbs.dreamstime.com/b/red-apple-isolated-clipping-path-19130134.jpg"
+            },
+            {
+                "name"  : "Banana", 
+                "origin": "Southeast Asia", 
+                "img"   : "https://m.media-amazon.com/images/I/51ebZJ+DR4L._AC_UF1000,1000_QL80_.jpg"
+            },
+            {
+                "name"  : "Cherry", 
+                "origin": "Asia Minor", 
+                "img"   : "https://static.libertyprim.com/files/varietes/cerise-burlat-large.jpg?1569344439"
+            },
+            {
+                "name"  : "Dragon", 
+                "origin": "Central America", 
+                "img"   : "https://exoticfruits.co.uk/cdn/shop/products/dragon-fruit-pitaya-white-exoticfruitscouk-988200.jpg?v=1645489225"
+            }
+        ];
+
+
+        const fruitBasket = $('#basket>tbody');
+        const lfruits = JSON.parse(localStorage.getItem('fruits'))
+
+        $.each(lfruits, function(i, fruit){
+            // console.log(i, fruit);
+            keepinBasket(fruit);
+        });
+
+        function keepinBasket(fruit){
+            let row = `
+                <tr>
+                    <td>0</td>
+                    <td><img src="${fruit.img}" height="64px" draggable="false"></td>
+                    <td>${fruit.name}</td>
+                    <td>${fruit.origin}</td>
+                    <td><button class="btn btn-danger delete">DELETE</button></td>
+                </tr>
+            `
+            fruitBasket.prepend(row);
+
+        }
+
+
+        function saveBasket(){
+            localStorage.setItem('fruits', JSON.stringify(fruits));
+        }
+
+    </script>
+</body>
+</html>
